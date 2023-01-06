@@ -9,7 +9,8 @@
     "icons": [
         {
             "src": "assets/img/icon.svg",
-            "type": "image/svg"
+            "type": "image/svg",
+            "sizes": "72x72"
           },
     ]
   }
