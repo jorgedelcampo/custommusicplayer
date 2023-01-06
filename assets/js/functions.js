@@ -14,10 +14,22 @@ let skinIndex = 0;
 
 let player = {
     init: function() {
+        player.serviceWorker();
         player.lockOrientation();
         //player.mediaControls();
         player.loadSongs();
         player.toggleSkin();
+    },
+
+    serviceWorker: function(){
+        if("serviceWorker" in navigator) {
+            window.addEventListener("load", function() {
+              navigator.serviceWorker
+                .register("/serviceWorker.js")
+                .then(res => console.log("service worker registered"))
+                .catch(err => console.log("service worker not registered", err))
+            })
+          }
     },
 
     lockOrientation: function() {
