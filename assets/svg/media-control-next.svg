@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg8501"
+   sodipodi:docname="media-control-next.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs8505">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect9749"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 | F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="2"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview8503"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="11.145833"
+     inkscape:cx="-4.7551402"
+     inkscape:cy="14.624299"
+     inkscape:window-width="1366"
+     inkscape:window-height="715"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg8501" />
+  <path
+     d="M 20,20 V 4 a 2,2 135 0 1 2,-2 v 18 a 2,2 135 0 1 -2,2 z M 3.6959966,20.940002 16.304003,13.059998 a 1.25,1.25 90 0 0 0,-2.119996 L 3.6959966,3.0599979 A 1.1084953,1.1084953 151.00269 0 0 2,4 v 16 a 1.1084953,1.1084953 28.997308 0 0 1.6959966,0.940002 z"
+     id="path8499"
+     inkscape:path-effect="#path-effect9749"
+     inkscape:original-d="M20 22v-20h2v20h-2zm-18 0l16-10-16-10v20z" />
+</svg>

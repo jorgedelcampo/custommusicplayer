@@ -1,0 +1,176 @@
+:root {
+    --color-1: #B3048A;
+    --color-2: #21B300;
+    --color-3: #1d1d1d;
+    --color-4: #f1f1f1;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: 100%;
+}
+
+.cassette {
+    position: relative;
+    width: 75vw;
+    height: 50vw;
+    background: url('../') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    flex-flow: nowrap row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.wheel_container {
+    display: flex;
+    flex-flow: nowrap row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 50vw;
+    height: 10vw;
+}
+
+.wheel {
+    width: 7vw;
+    height: 7vw;
+    opacity: .75;
+}
+
+#player.on .wheel {
+    animation: wheel 3s infinite linear;
+}
+
+#player.paused .wheel {
+    animation-play-state: paused;
+}
+
+@keyframes wheel {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.reel_container {
+    width: 10vw;
+    height: 4vw;
+    background-color: var(--color-1);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.reel {
+    width: 26vw;
+    height: 26vw;
+    border-radius: 50%;
+    background-color: var(--color-3);
+    position: absolute;
+}
+
+.reel_left {
+    left: -23vw;
+}
+
+.reel_right {
+    right: -23vw;
+}
+
+.actions {
+    display: flex;
+    flex-flow: nowrap row;
+    width: 50%;
+    justify-content: space-between;
+    margin: .8em auto;
+}
+
+.actions i {
+    width: auto;
+    color: var(--color-2);
+    font-size: medium;
+    transition: color .2s;
+}
+
+@keyframes up_down {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-25%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.transport {
+    display: flex;
+    width: 65vw;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: auto;
+    margin-bottom: 0;
+}
+
+.transport .duration {
+    display: flex;
+    width: 70vw;
+    justify-content: center;
+}
+
+.transport .duration span {
+    color: white;
+    font-family: arial;
+    font-weight: 100;
+    font-size: xx-small;
+}
+
+.transport .buttons {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: 1em auto;
+}
+
+.transport img {
+    filter: invert(1);
+}
+
+.transport .seeker {
+    pointer-events: none;
+    filter: grayscale(1);
+    margin: auto 2vw;
+    transition: filter .5s;
+}
+
+.transport button {
+    filter: grayscale(1);
+    pointer-events: none;
+    opacity: .2;
+    flex: 1;
+    transition: opacity .5s, filter .5s;
+}
+
+.transport.ready .seeker {
+    pointer-events: initial;
+    filter: grayscale(0);
+}
+
+.transport.ready button {
+    filter: grayscale(0);
+    pointer-events: initial;
+    opacity: 1;
+}
+
+#selectSong {
+    display: none;
+}
