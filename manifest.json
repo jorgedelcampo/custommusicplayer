@@ -1,6 +1,6 @@
 {
-    "name": "Custom Music Player",
-    "short_name": "Custom Music Player",
+    "name": "Skin Music Player",
+    "short_name": "Skin Music Player",
     "start_url": "index.html",
     "display": "standalone",
     "background_color": "#1d1d1d",
@@ -9,35 +9,7 @@
     "icons": [
         {
             "src": "assets/img/icon.svg",
-            "type": "image/svg", "sizes": "72x72"
+            "type": "image/svg",
           },
-          {
-            "src": "assets/img/icon.svg",
-            "type": "image/svg", "sizes": "96x96"
-      },
-      {
-        "src": "assets/img/icon.svg",
-        "type": "image/svg","sizes": "128x128"
-      },
-      {
-        "src": "assets/img/icon.svg",
-        "type": "image/svg", "sizes": "144x144"
-      },
-      {
-        "src": "assets/img/icon.svg",
-        "type": "image/svg", "sizes": "152x152"
-      },
-      {
-        "src": "assets/img/icon.svg",
-        "type": "image/svg", "sizes": "192x192"
-      },
-      {
-        "src": "assets/img/icon.svg",
-        "type": "image/svg", "sizes": "384x384"
-      },
-      {
-        "src": "assets/img/icon.svg",
-        "type": "image/svg", "sizes": "512x512"
-      }
     ]
   }
