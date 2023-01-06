@@ -15,7 +15,7 @@ let skinIndex = 0;
 let player = {
     init: function() {
         player.serviceWorker();
-        player.installPWA();
+        //player.installPWA();
         player.lockOrientation();
         //player.mediaControls();
         player.loadSongs();
