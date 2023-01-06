@@ -28,7 +28,6 @@ html, body {
     background-image: url(../img/noise.png);
     mix-blend-mode: multiply;
     opacity: .5;
-    z-index: -999999999999;
     pointer-events: none;
 }
 
