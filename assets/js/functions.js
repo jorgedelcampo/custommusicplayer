@@ -40,11 +40,11 @@ let player = {
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: caption,
-                /*artwork: [{
+                artwork: [{
                     src: 'assets/img/icon.svg',
                     sizes: '96x96',
                     type: 'image/svg'
-                }]*/
+                }]
             });
 
             navigator.mediaSession.setActionHandler('play', () => { player.play();  });
