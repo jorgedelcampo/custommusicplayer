@@ -10,7 +10,7 @@
         {
             "src": "assets/img/icon.svg",
             "type": "image/svg",
-            "sizes": "72x72"
+            "sizes": "256x256"
           },
     ]
   }
