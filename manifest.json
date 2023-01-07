@@ -9,27 +9,27 @@
     "icons": [
         {
         "src": "assets/img/icon.png",
-        "type": "image/svg",
+        "type": "image/png",
         "sizes": "144x144"
         },
         {
         "src": "assets/img/icon.png",
-        "type": "image/svg",
+        "type": "image/png",
         "sizes": "152x152"
         },
         {
         "src": "assets/img/icon.png",
-        "type": "image/svg",
+        "type": "image/png",
         "sizes": "192x192"
         },
         {
         "src": "assets/img/icon.png",
-        "type": "image/svg",
+        "type": "image/png",
         "sizes": "384x384"
         },
         {
         "src": "assets/img/icon.svg",
-        "type": "image/svg",
+        "type": "image/png",
         "sizes": "512x512"
         }
     ]
