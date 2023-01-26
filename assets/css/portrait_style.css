@@ -338,7 +338,7 @@ input[type=range] {
 .content_prompt #close_prompt{
     position: absolute;
     margin-bottom: 0;
-    bottom: 10vw;
+    bottom: 12vw;
     font-family: 'Permanent Marker';
     font-size: xx-large;
     color: var(--color-1);
