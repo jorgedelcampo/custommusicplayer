@@ -400,8 +400,11 @@ iframe {
 .transport button {
     filter: grayscale(1);
     pointer-events: none;
-    opacity: .2;
     transition: opacity .5s, filter .5s;
+}
+
+.transport button img {
+    opacity: .2;
 }
 
 .transport.ready .seeker {
