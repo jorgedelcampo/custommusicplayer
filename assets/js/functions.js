@@ -2,156 +2,284 @@ let audio = false;
 let songs = [];
 let item = false;
 let caption = '';
-
-let skin = {
-    "cassette" : "<div class=\"cassette\"><div class=\"wheel_container\"><img src=\"assets/svg/reel.svg\" class=\"wheel wheel_left\"><div class=\"reel_container\"><div class=\"reel reel_left\"></div><div class=\"reel reel_right\"></div></div><img src=\"assets/svg/reel.svg\" class=\"wheel wheel_right\"></div></div>",
-    
-    "vinyl" : "<div class=\"vinyl\"></div>"
-}
+let autoplay = false;
 
 let skinIndex = 0;
 
+let canvas = false;
+let ctx = false;
+let WIDTH = 0;
+let HEIGHT = 0;
 
 let player = {
     init: function() {
-        player.serviceWorker();
-        //player.installPWA();
-        player.lockOrientation();
-        //player.mediaControls();
+        player.initCanvas();
         player.loadSongs();
         player.toggleSkin();
+        player.initGestures();
     },
 
-    serviceWorker: function(){
-        if("serviceWorker" in navigator) {
-            window.addEventListener("load", function() {
-              navigator.serviceWorker
-                .register("serviceWorker.js")
-                .then(res => console.log("service worker registered"))
-                .catch(err => console.log("service worker not registered", err))
-            })
-          }
-    },
-    
-    installPWA: function(){
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-          // Prevent Chrome 67 and earlier from automatically showing the prompt
-          e.preventDefault();
-          // Stash the event so it can be triggered later.
-          deferredPrompt = e;
+    initCanvas: function() {
+        canvas = document.querySelector("canvas");
+        ctx = canvas.getContext("2d");
+        canvas.width = innerWidth * 0.8;
+        canvas.height = innerWidth * 0.5625; // 16:9
+        WIDTH = canvas.width;
+        HEIGHT = canvas.height;
+
+        window.addEventListener('resize', function(){
+            canvas.width = innerWidth * 0.8;
+            canvas.height = innerWidth * 0.5625; // 16:9
+            WIDTH = canvas.width;
+            HEIGHT = canvas.height;
         });
-        // Show the prompt
-        deferredPrompt.prompt();
-        // Wait for the user to respond to the prompt
-        deferredPrompt.userChoice
-          .then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              console.log('User accepted the A2HS prompt');
+    },
+
+    initGestures: function(){
+        let prompt = document.getElementById('aside_prompt');
+        prompt.addEventListener('touchstart', handleTouchStart, false);        
+        prompt.addEventListener('touchmove', handleTouchMove, false);
+
+        var xDown = null;                                                        
+        var yDown = null;
+
+        function getTouches(evt) {
+        return evt.touches ||             // browser API
+                evt.originalEvent.touches; // jQuery
+        }                                                     
+                                                                                
+        function handleTouchStart(evt) {
+            const firstTouch = getTouches(evt)[0];                                      
+            xDown = firstTouch.clientX;
+            yDown = firstTouch.clientY;
+        };                                                
+                                                                                
+        function handleTouchMove(evt) {
+            if ( ! xDown || ! yDown ) {
+                return;
+            }
+
+            let xUp = evt.touches[0].clientX;                                    
+            let yUp = evt.touches[0].clientY;
+
+            let xDiff = xDown - xUp;
+            let yDiff = yDown - yUp;
+                                                                                
+            if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+                if ( xDiff < 0 ) {
+                    /* right swipe */ 
+                } else {
+                    /* left swipe */
+                    prompt.classList.remove('prompt_active');
+                    autoplay = false;
+                }                       
             } else {
-              console.log('User dismissed the A2HS prompt');
+                if ( yDiff < 0 ) {
+                    /* down swipe */ 
+                } else { 
+                    /* up swipe */
+                }                                                                 
             }
-            deferredPrompt = null;
-          });
-    },
-
-    lockOrientation: function() {
-        //screen.orientation.lock('portrait');
-    },
-
-    mediaControls: function(){
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: caption,
-                artwork: [{
-                    src: 'assets/img/icon.svg',
-                    sizes: '96x96',
-                    type: 'image/svg'
-                }]
-            });
-
-            navigator.mediaSession.setActionHandler('play', () => { player.play();  });
-            navigator.mediaSession.setActionHandler('pause', () => { player.pause(); });
-            navigator.mediaSession.setActionHandler('previoustrack', () => { player.back(); });
-            navigator.mediaSession.setActionHandler('nexttrack', () => { player.next(); });
-
-            function updateMediaSessionState(){
-                navigator.mediaSession.playbackState = audio.paused ? "paused" : "playing";
-                navigator.mediaSession.setPositionState({
-                    duration: audio.duration,
-                    playbackRate: audio.playbackRate,
-                    position: audio.currentTime,
-                });
-            }
-            if("mediasession" in navigator){
-                const events = ['playing', 'paused', 'durationchange', 'ratechange', 'timechange'];
-                //for(const event of events)
-                    //audio.addEventListener(event, updateMediaSessionState);
-            }
-
-            }
+            /* reset values */
+            xDown = null;
+            yDown = null;                                             
+        };
     },
 
     toggleSkin: function() {
         const toggleSkin = document.getElementById('toggle-skin');
-        let playerEl = document.getElementById('player');
-        let playerCont = document.getElementById('player_container');
-        let songCaption = document.getElementById('song_caption');
-        let skins = [];
-        for (let x in skin) {
-            skins.push(x);
+        let canvas = document.querySelector('canvas');
+        skinIndex++;
+        if(skinIndex >= 4){
+            skinIndex = 0;
         }
-        playerEl.innerHTML = skin[skins[0]];
-        playerCont.classList.add(skins[0]);
+        if(!audio){
+            skinIndex = 1;
+        }
+        if(skinIndex === 3 && audio){
+            canvas.style.filter = 'none';
+        }
+        else {
+            canvas.style.filter = 'drop-shadow(2px 2px 0px var(--color-1)) drop-shadow(-2px -2px 0px var(--color-2))';
+        }
         toggleSkin.addEventListener('click', function(){
-            playerEl.classList.add('animated');
-            songCaption.classList.add('animated');
-            skinIndex++;
-            if(skinIndex > skins.length-1){
-                skinIndex = 0;
-            }
+            canvas.classList.add('animated');
             toggleSkin.classList.add('toggle_animated');
             toggleSkin.addEventListener('animationend', () => {
                 toggleSkin.classList.remove('toggle_animated');
-                playerEl.classList.remove('animated');
-                songCaption.classList.remove('animated');
+                canvas.classList.remove('animated');
             });
-            playerEl.innerHTML = skin[skins[skinIndex]];
-            playerCont.removeAttribute('class');
-            playerCont.classList.add(skins[skinIndex]);
-            player.captionSong(caption);
         });
+    },
+
+    audioCanvas: function() {
+        if(audio){
+
+            // 1. Definir los elementos y los eventos
+            canvas.classList.remove('await');
+
+            // 3. Crear la animación con canvas
+            const drawAudio = (analyser) => {
+    
+    
+            if(skinIndex === 0){ // cassette
+                ctx.clearRect(0, 0, WIDTH, HEIGHT);
+                
+                // cassette
+                let img = new Image();
+                img.src = "assets/img/cassette.svg";
+                let ratioImg = img.width / img.height;
+                let deltaHeight = HEIGHT - (WIDTH / ratioImg);
+                const widthCassette = WIDTH * 0.9;
+                ctx.drawImage(img, WIDTH * 0.05, deltaHeight / 2, widthCassette, widthCassette / ratioImg);
+                
+                // nombre canción
+                ctx.font = Math.round(WIDTH * 0.036) + 'px Permanent Marker';
+                ctx.fillStyle = '#fafafa';
+                ctx.textAlign = 'center';
+                ctx.fillText(caption.slice(0,28), WIDTH / 2, 0.33 * (widthCassette / ratioImg));
+                
+                // rueda dentada left
+                ctx.save();
+                    img = new Image();
+                    img.src = "assets/svg/reel.svg";
+                    const wheelSize = widthCassette * 0.12;
+                    ctx.translate(0.25 * WIDTH + wheelSize / 2, 0.46 * (widthCassette / ratioImg) + wheelSize / 2);
+                    ctx.rotate(audio.currentTime);
+                    ctx.drawImage(img, -wheelSize / 2, -wheelSize / 2, wheelSize, wheelSize);
+                ctx.restore();
+                
+                // rueda dentada right
+                ctx.save();
+                    img = new Image();
+                    img.src = "assets/svg/reel.svg";
+                    ctx.translate((0.75 * WIDTH) - (WIDTH * 0.12) + wheelSize / 2, 0.46 * (widthCassette / ratioImg) + wheelSize / 2);
+                    ctx.rotate(audio.currentTime);
+                    ctx.drawImage(img, -wheelSize / 2, -wheelSize / 2, wheelSize, wheelSize);
+                ctx.restore();
+
+            }
+
+            // vinyl
+            if (skinIndex === 1){
+                ctx.clearRect(0, 0, WIDTH, HEIGHT);
+                ctx.save();
+                    let img = new Image();
+                    img.src = "assets/img/vinyl.svg";
+                    ctx.translate(WIDTH / 2, HEIGHT / 2);
+                    ctx.rotate(audio.currentTime);
+                    ctx.drawImage(img, -HEIGHT / 2, -HEIGHT / 2, HEIGHT, HEIGHT);
+                ctx.restore();
+            }
+
+            // speaker
+            if (skinIndex === 2){
+                const img = new Image();
+                img.src = 'assets/img/loadspeaker.png';
+                ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                const barWidth = (WIDTH / bufferLength) * 3;
+                let x = 0;
+                analyser.getByteFrequencyData(dataArray);
+
+                // all the magic    
+                dataArray.forEach((decibel, index) => {
+                    if(index == 0){
+                        const redond = Math.round(decibel * 100) / 100;
+                        const calcSize = HEIGHT*0.75 + 25*(redond/HEIGHT);
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, (WIDTH - calcSize) / 2, (HEIGHT - calcSize) / 2, calcSize, calcSize);
+                    }
+                    x += barWidth + 1;
+                });
+            } // end skinIndex === 2 
+            
+            // spectrum
+            if (skinIndex === 3){
+                ctx.clearRect(0, 0, WIDTH, HEIGHT);
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                const barWidth = (WIDTH / bufferLength) * 3;
+                let x = 0;
+                analyser.getByteFrequencyData(dataArray);
+
+                // all the magic    
+                dataArray.forEach((decibel) => {
+                    let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                    gradient.addColorStop(0, "#B3048A");
+                    gradient.addColorStop(1, "#21B300");
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x, HEIGHT * 1.36 - decibel, barWidth, decibel);
+                    x += barWidth + 1;
+                });
+            } // end skinIndex === 3
+
+        requestAnimationFrame(() => drawAudio(analyser));
+        
+        } // end drawAudio()
+
+        // 2. Crear el analyser y la data necesaria
+            const initAnalyser = async (audio) => {
+        
+            // all the setup
+            const context = new AudioContext();
+            const src = context.createMediaElementSource(audio);
+            const analyser = context.createAnalyser();
+            src.connect(analyser);
+            analyser.connect(context.destination);
+            analyser.fftSize = 256;
+            return analyser;
+            };
+        
+            const onChange = async (event) => {
+            const analyser = await initAnalyser(audio);
+
+            // dibujar
+            drawAudio(analyser);
+            };
+
+            // listener
+            audio.onplay = onChange();
+        }
     },
 
     loadSongs: function(){
         let selectSong = document.getElementById('selectSong');
         selectSong.addEventListener('change', function(e){
             const files = e.target.files;
+            const objects = [];
             for (const file of files) {
                 songs.push({'url': URL.createObjectURL(file), 'name': file.name});
             } // end for
+            
+            let promptCon = document.querySelector('#aside_prompt .content_prompt');
+            promptCon.innerHTML = '<p class="promp_title">Playlist</p>';
+            let listSongs = '';
+            for(let i = 0 ; i < songs.length; i++){
+                listSongs += '<li onclick="player.selectSong(' + i + ')">' + songs[i].name + '</li>';
+            } // end for
+            promptCon.innerHTML += '<ul>' + listSongs + '</ul>';
+            promptCon.innerHTML += '<label for="selectSong"><img src="assets/svg/add.svg"></label>';
+            promptCon.innerHTML += '<div id="close_prompt">x</div>';
+            
             if(songs.length > 0 && !audio){
                 player.selectSong(0);
+                player.audioCanvas();
             }
         }); // enf addEventListener
     },
 
     showList: function() {
         let prompt = document.getElementById('aside_prompt');
-        let promptCon = document.querySelector('#aside_prompt .content_prompt');
         prompt.classList.add('prompt_active');
-        promptCon.innerHTML = '<p class="promp_title">Playlist</p>';
-        let listSongs = '';
-        for(let i = 0 ; i < songs.length; i++){
-            listSongs += '<li onclick="player.selectSong(' + i + ')">' + songs[i].name + '</li>';
-        } // end for
-        promptCon.innerHTML += '<ul>' + listSongs + '</ul>';
-        promptCon.innerHTML += '<label for="selectSong"><img src="assets/svg/add.svg"></label>';
-        promptCon.innerHTML += '<div id="close_prompt">x</div>';
+        autoplay = true;
         let closePrompt = document.getElementById('close_prompt');
         closePrompt.addEventListener('click', function(){
             let prompt = document.getElementById('aside_prompt');
             prompt.classList.remove('prompt_active');
+            autoplay = false;
         });
     },
 
@@ -160,7 +288,14 @@ let player = {
         prompt.classList.remove('prompt_active');
         item = i;
         caption = songs[i].name;
-        audio = new Audio(songs[i].url);
+        if(!audio){
+            audio = new Audio(songs[i].url);
+        }
+        audio.src = songs[i].url;
+        if(autoplay){
+            audio.play();
+            autoplay = false;
+        }
         player.captionSong(caption);
         let transport = document.querySelector('.transport');
         transport.classList.add('ready');
@@ -170,9 +305,9 @@ let player = {
             let s = Math.round(audio.duration % 60);
             totalTime.innerHTML = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
         };
+        audio.title = caption;
         let currentTime = document.querySelector('.transport .current_time');
         currentTime.innerHTML = "00:00";
-        player.mediaControls();
     },
 
     captionSong: function(i) {
@@ -197,37 +332,19 @@ let player = {
     },
 
     play: function() {
-        if(!audio) {
-            alert('Debes seleccionar una canción');
-        }
-        else {
-            if(audio.paused){
-                audio.play();
-                let playerEl = document.getElementById('player');
-                playerEl.classList.remove('paused');
-                let on = document.querySelectorAll('.transport .on');
-                on.forEach(e => e.classList.remove('on'));
-                const play = document.querySelector('.transport .play');
-                player.duration();
-                playerEl.classList.add('on');
-                play.firstElementChild.setAttribute('src', 'assets/svg/media-control-pause.svg');
-                player.moveWheel();
-                player.endSong();
-            }
-            else {
-                player.pause();
-            }
-        }
+        audio.play();
+        let on = document.querySelectorAll('.transport .on');
+        on.forEach(e => e.classList.remove('on'));
+        player.duration();
+        player.moveWheel();
+        player.endSong();
     },
 
     pause: function() {
         audio.pause();
-        let playerEl = document.getElementById('player');
-        playerEl.classList.add('paused');
         let on = document.querySelectorAll('.transport .on');
         on.forEach(e => e.classList.remove('on'));
         let play = document.querySelector('.transport .play');
-        //playerEl.classList.remove('on');
         play.firstElementChild.setAttribute('src', 'assets/svg/media-control-play.svg');
         player.stopWheel();
     },
@@ -271,6 +388,30 @@ let player = {
         }
     },
 
+    togglePlayPause: function(){
+        if(!audio) {
+            alert('Debes seleccionar una canción');
+        }
+        else {
+            if(audio.paused){
+                audio.setAttribute('title', caption);
+                audio.setAttribute('controls', true);
+                audio.setAttribute('controlslist', true);
+                audio.play();
+                //let on = document.querySelectorAll('.transport .on');
+                //on.forEach(e => e.classList.remove('on'));
+                const play = document.querySelector('.transport .play');
+                //player.duration();
+                play.firstElementChild.setAttribute('src', 'assets/svg/media-control-pause.svg');
+                //player.moveWheel();
+                //player.endSong();
+            }
+            else {
+                player.pause();
+            }
+        }
+    },
+
     moveWheel: function() {
         let wheel = document.querySelectorAll('.cassette_container .wheel');
         wheel.forEach(e => e.classList.add('on'));
@@ -283,4 +424,4 @@ let player = {
     },
 
 }
-document.addEventListener('DOMContentLoaded', player.init);
+document.addEventListener('DOMContentLoaded', player.init, false);
