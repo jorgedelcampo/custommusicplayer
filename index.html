@@ -10,9 +10,9 @@
         <meta name="color-scheme" content="light dark">
         <script src="assets/js/functions.js"></script>
         <link rel="icon" type="image/icon" href="assets/img/icon.svg">
-        <link rel="stylesheet" type="text/css" media="(orientation: portrait)" href="assets/css/portrait_style.css">
-        <link rel="stylesheet" type="text/css" media="(orientation: landscape)"
-        href="assets/css/portrait_style.css" />
+        <!--<link rel="stylesheet" type="text/css" media="(orientation: portrait)" href="assets/css/portrait_style.css">
+        <link rel="stylesheet" type="text/css" media="(orientation: landscape)" href="assets/css/portrait_style.css" />-->
+        <link rel="stylesheet" type="text/css" href="assets/css/portrait_style.css">
         <title>Skin Music Player</title>
     </head>
     <body>
@@ -27,25 +27,13 @@
                 </div>
             </div>
 
-            <div id="player_container">
-                <div id="song_caption">
-                    <marquee></marquee>
-                </div>
-                <!-- CUSTOM PLAYER -->
-                <div id="player">                    
-                </div>
-                <!-- FIN CUSTOM PLAYER -->
-
-                <!-- ACTIONS -->
-                <!--<div class="actions row align-items-center">
-                    <i class="fas fa-heart"></i>
-                    <i class="fas fa-share-alt"></i>
-                    <i class="fas fa-comment-alt"></i>
-                </div>-->
-            </div>
+            <canvas class="await"></canvas>
 
             <!-- TRANSPORT -->
             <div class="transport row align-items-center">
+                <div id="song_caption">
+                    <marquee></marquee>
+                </div>
                 <div class="duration">
                     <span class="current_time"></span>
                     <input type="range" class="seeker" id="seeker" min="0" max="100" value="0" onchange="player.seeker(this)">
@@ -54,14 +42,14 @@
                 <div class="buttons">
                     <button class="button list" onclick="player.showList()"><img src="assets/svg/list.svg"></button>
                     <button class="button preview" onclick="player.back()"><img src="assets/svg/media-control-preview.svg"></button>
-                    <button class="button play" onclick="player.play()"><img src="assets/svg/media-control-play.svg"></button>
+                    <button class="button play" onclick="player.togglePlayPause()"><img src="assets/svg/media-control-play.svg"></button>
                     <button class="button next" onclick="player.next()"><img src="assets/svg/media-control-next.svg"></button>
                     <input type="file" id="selectSong" multiple accept="audio/*">
                     <label for="selectSong" class="button add"><img src="assets/svg/add.svg"></label>
                 </div>
             </div>
 
-            <button id="toggle-skin" class="toggle-skin"><img src="assets/svg/update-arrows.svg"></button>
+            <button id="toggle-skin" class="toggle-skin" onclick="player.toggleSkin()"><img src="assets/svg/update-arrows.svg"></button>
         </div>
     </body>
 </html>
