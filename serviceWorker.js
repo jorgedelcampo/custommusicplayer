@@ -1,4 +1,4 @@
-const staticMediaPlayer = "custom-media-player-v1"
+const staticMediaPlayer = "skin-music-player-v1"
 const assets = [
   "/",
   "/index.html",
