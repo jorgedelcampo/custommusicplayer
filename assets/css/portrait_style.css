@@ -415,6 +415,9 @@ iframe {
 .transport.ready button {
     filter: grayscale(0);
     pointer-events: initial;
+}
+
+.transport.ready button img {
     opacity: 1;
 }
 
