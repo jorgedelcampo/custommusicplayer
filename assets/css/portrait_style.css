@@ -59,14 +59,14 @@ html, body {
 }
 
 .brand img {
-    width: 12vw;
-    height: 12vw;
+    width: 15vw;
+    height: 15vw;
 }
 
 .brand h1 {
     font-family: 'Permanent Marker', cursive, sans-serif;
     font-style: italic;
-    font-size: small;
+    font-size: large;
     color: transparent;
     margin-top: 5px;
     -webkit-text-stroke: 1px var(--color-1);
