@@ -1,3 +1,5 @@
+let testing = true; // toggle true for testing
+
 let audio = false;
 let songs = [];
 let item = false;
@@ -84,6 +86,94 @@ let player = {
             xDown = null;
             yDown = null;                                             
         };
+    },
+
+    createMediaControls: function(){
+        if(testing){
+            return;
+        }
+        MusicControls.create({
+            track       : caption,  // optional, default : ''
+            cover       : 'assets/img/icon.png', // optional, default : nothing
+            isPlaying   : true, // optional, default : true
+            dismissable : true, // optional, default : false
+        
+            // hide previous/next/close buttons:
+            hasPrev     : true,		// show previous button, optional, default: true
+            hasNext     : true,		// show next button, optional, default: true
+            hasClose    : true,		// show close button, optional, default: false
+        
+            // Android only, optional
+            // text displayed in the status bar when the notification (and the ticker) are updated
+            ticker      : caption,
+            //All icons default to their built-in android equivalents
+            //The supplied drawable name, e.g. 'media_play', is the name of a drawable found under android/res/drawable* folders
+            playIcon: 'media_play',
+            pauseIcon: 'media_pause',
+            prevIcon: 'media_prev',
+            nextIcon: 'media_next',
+            closeIcon: 'media_close',
+            notificationIcon: 'notification'
+        }, onSuccess, onError);
+
+        function onSuccess(){
+            //console.log('onSuccess');
+        }
+
+        function onError(err){
+            console.log('Error: ' + err);
+        }
+    },
+
+    listenMediaControls: function(){
+        if(testing){
+            return;
+        }
+        function events(action) {
+
+            const message = JSON.parse(action).message;
+            switch(message) {
+                case 'music-controls-next':
+                    player.next();
+                    break;
+                case 'music-controls-previous':
+                    player.back();
+                    break;
+                case 'music-controls-pause':                    
+                    player.updateMediaControls(false); // toggle pause notification
+                    player.play();
+                    break;
+                case 'music-controls-play':
+                    player.updateMediaControls(true); // toggle play notification
+                    player.play();
+                    break;
+                case 'music-controls-media-button-pause':
+                    player.play();
+                    break;
+                case 'music-controls-media-button-play':
+                    player.play();
+                    break;
+                case 'music-controls-media-button-play-pause':
+                    player.play();
+                    break;
+                case 'music-controls-destroy':
+                    MusicControls.destroy();
+                    break;
+            }
+        }
+
+        // Register callback
+        MusicControls.subscribe(events);
+
+        MusicControls.listen();
+    },
+
+    updateMediaControls: function(value){
+        if(testing){
+            return;
+        }
+        MusicControls.updateIsPlaying(value);
+        MusicControls.updateDismissable(true);
     },
 
     toggleSkin: function() {
