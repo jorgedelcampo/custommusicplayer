@@ -34,7 +34,6 @@ let player = {
             console.log("Service worker registered");
             });
         }
-    }
     },
 
     initCanvas: function() {
