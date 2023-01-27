@@ -27,7 +27,7 @@ let player = {
         console.log("Active service worker found");
         } else {
             navigator.serviceWorker
-            .register("../../serviceWorker.js", {
+            .register("serviceWorker.js", {
             scope: "./"
             })
             .then(function (reg) {
