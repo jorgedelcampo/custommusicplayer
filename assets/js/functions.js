@@ -295,6 +295,8 @@ let player = {
         if(autoplay){
             audio.play();
             autoplay = false;
+            const play = document.querySelector('.transport .play');
+            play.firstElementChild.setAttribute('src', 'assets/svg/media-control-pause.svg');
         }
         player.captionSong(caption);
         let transport = document.querySelector('.transport');
@@ -308,6 +310,9 @@ let player = {
         audio.title = caption;
         let currentTime = document.querySelector('.transport .current_time');
         currentTime.innerHTML = "00:00";
+        player.createMediaControls();
+        //player.audioCanvas();
+        //player.toggleSkin();
     },
 
     captionSong: function(i) {
@@ -338,6 +343,8 @@ let player = {
         player.duration();
         player.moveWheel();
         player.endSong();
+        player.updateMediaControls(true);
+        player.listenMediaControls();
     },
 
     pause: function() {
@@ -347,6 +354,8 @@ let player = {
         let play = document.querySelector('.transport .play');
         play.firstElementChild.setAttribute('src', 'assets/svg/media-control-play.svg');
         player.stopWheel();
+        player.updateMediaControls(false);
+        player.listenMediaControls();
     },
 
     stop: function() {
@@ -398,13 +407,8 @@ let player = {
                 audio.setAttribute('controls', true);
                 audio.setAttribute('controlslist', true);
                 audio.play();
-                //let on = document.querySelectorAll('.transport .on');
-                //on.forEach(e => e.classList.remove('on'));
                 const play = document.querySelector('.transport .play');
-                //player.duration();
                 play.firstElementChild.setAttribute('src', 'assets/svg/media-control-pause.svg');
-                //player.moveWheel();
-                //player.endSong();
             }
             else {
                 player.pause();
