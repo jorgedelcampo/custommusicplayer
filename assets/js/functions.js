@@ -31,7 +31,7 @@ let player = {
             scope: "./"
             })
             .then(function(reg) {
-            console.log("Service worker registered);
+            console.log("Service worker registered");
             });
         }
     }
