@@ -19,6 +19,22 @@ let player = {
         player.loadSongs();
         player.toggleSkin();
         player.initGestures();
+        player.pwa();
+    },
+    
+    pwa: function(){
+        if (navigator.serviceWorker.controller) {
+        console.log("Active service worker found");
+        } else {
+            navigator.serviceWorker
+            .register("../../serviceWorker.js", {
+            scope: "./"
+            })
+            .then(function (reg) {
+            console.log("Service worker  registered);
+            });
+        }
+    }
     },
 
     initCanvas: function() {
