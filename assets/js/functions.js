@@ -30,8 +30,8 @@ let player = {
             .register("serviceWorker.js", {
             scope: "./"
             })
-            .then(function (reg) {
-            console.log("Service worker  registered);
+            .then(function(reg) {
+            console.log("Service worker registered);
             });
         }
     }
