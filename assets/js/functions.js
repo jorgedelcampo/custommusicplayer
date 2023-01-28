@@ -104,9 +104,33 @@ let player = {
     },
 
     createMediaControls: function(){
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: caption,
+            artwork: [
+              { src: 'assets/img/icon.png', sizes: '512x512', type: 'image/png' },
+            ]
+          });
+
+          navigator.mediaSession.setActionHandler('play', () => { player.play(); });
+          navigator.mediaSession.setActionHandler('pause', () => { player.pause(); });
+          navigator.mediaSession.setActionHandler('stop', () => { player.stop(); });
+          navigator.mediaSession.setActionHandler('seekbackward', () => { player.seeker(); });
+          navigator.mediaSession.setActionHandler('seekforward', () => { player.seeker(); });
+          navigator.mediaSession.setActionHandler('seekto', () => { /* Code excerpted. */ });
+          navigator.mediaSession.setActionHandler('previoustrack', () => { player.back(); });
+          navigator.mediaSession.setActionHandler('nexttrack', () => { player.next(); });
+          //navigator.mediaSession.setActionHandler('skipad', () => { /* Code excerpted. */ });
+          //navigator.mediaSession.setActionHandler('togglecamera', () => { /* Code excerpted. */ });
+          //navigator.mediaSession.setActionHandler('togglemicrophone', () => { /* Code excerpted. */ });
+          //navigator.mediaSession.setActionHandler('hangup', () => { /* Code excerpted. */ });
+
+        }
+        
         if(testing){
             return;
         }
+
         MusicControls.create({
             track       : caption,  // optional, default : ''
             cover       : 'assets/img/icon.png', // optional, default : nothing
@@ -141,6 +165,41 @@ let player = {
     },
 
     listenMediaControls: function(){
+        
+        const actionHandlers = [
+          // play
+          [
+            'play',
+            async () => {
+              // play our audio
+              await player.play();
+              // set playback state
+              navigator.mediaSession.playbackState = "playing";
+              // update our status element
+              updateStatus(allMeta[index], 'Action: play  |  Track is playing…')
+            }
+          ],
+          [
+            'pause',
+            () => {
+              // pause out audio
+              player.pause();
+              // set playback state
+              navigator.mediaSession.playbackState = "paused";
+              // update our status element
+              updateStatus(allMeta[index], 'Action: pause  |  Track has been paused…');
+            }
+          ],
+        ]
+
+        for (const [action, handler] of actionHandlers) {
+          try {
+            navigator.mediaSession.setActionHandler(action, handler);
+          } catch (error) {
+            console.log(`The media session action "${action}" is not supported yet.`);
+          }
+        }
+        
         if(testing){
             return;
         }
@@ -519,17 +578,6 @@ let player = {
                 player.pause();
             }
         }
-    },
-
-    moveWheel: function() {
-        let wheel = document.querySelectorAll('.cassette_container .wheel');
-        wheel.forEach(e => e.classList.add('on'));
-        wheel.forEach(e => e.style.animationPlayState = 'running');
-    },
-
-    stopWheel: function() {
-        let wheel = document.querySelectorAll('.cassette_container .wheel');
-        wheel.forEach(e => e.style.animationPlayState = 'paused');
     },
 
 }
