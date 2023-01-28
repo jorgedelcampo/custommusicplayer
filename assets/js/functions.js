@@ -505,7 +505,6 @@ let player = {
         let on = document.querySelectorAll('.transport .on');
         on.forEach(e => e.classList.remove('on'));
         player.duration();
-        player.moveWheel();
         player.endSong();
         player.updateMediaControls(true);
         player.listenMediaControls();
@@ -517,7 +516,6 @@ let player = {
         on.forEach(e => e.classList.remove('on'));
         let play = document.querySelector('.transport .play');
         play.firstElementChild.setAttribute('src', 'assets/svg/media-control-play.svg');
-        player.stopWheel();
         player.updateMediaControls(false);
         player.listenMediaControls();
     },
@@ -529,7 +527,6 @@ let player = {
         caption[0].innerHTML = '';
         let on = document.querySelectorAll('.transport .on');
         on.forEach(e => e.classList.remove('on'));
-        player.stopWheel();
     },
 
     back: function() {
