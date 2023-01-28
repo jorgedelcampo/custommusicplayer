@@ -112,8 +112,8 @@ let player = {
             ]
           });
 
-          navigator.mediaSession.setActionHandler('play', () => { player.play(); });
-          navigator.mediaSession.setActionHandler('pause', () => { player.pause(); });
+          navigator.mediaSession.setActionHandler('play', () => { player.play(); player.togglePlayPause(); });
+          navigator.mediaSession.setActionHandler('pause', () => { player.pause(); player.togglePlayPause(); });
           navigator.mediaSession.setActionHandler('stop', () => { player.stop(); });
           navigator.mediaSession.setActionHandler('seekbackward', () => { player.seeker(); });
           navigator.mediaSession.setActionHandler('seekforward', () => { player.seeker(); });
